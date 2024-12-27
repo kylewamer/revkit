@@ -16,7 +16,7 @@ void truth_table( py::module m );
 void esop( py::module m);
 void decomposition( py::module m );
 void synthesis( py::module m );
-//void cube( py::module m);
+void cube( py::module m);
 }
 
 PYBIND11_MODULE( _revkit, m )
@@ -28,5 +28,5 @@ PYBIND11_MODULE( _revkit, m )
   revkit::esop( m );
   revkit::decomposition( m );
   revkit::synthesis( m );
-  //revkit::cube( m );
+  revkit::cube( m );
 }

@@ -32,11 +32,14 @@
 #include <easy/sat/xor_clauses_to_cnf.hpp>
 #include <easy/sat/cnf_writer.hpp>
 #include <easy/utils/string_utils.hpp>
-#include <json/json.hpp>
+#include <nlohmann/json.hpp>
 #include <fmt/format.h>
 #include <fstream>
 
 namespace easy::esop
+{
+
+namespace detail
 {
 
 inline esops_t exact_synthesis_from_binary_string( const std::string& bits, const std::string& care, const nlohmann::json& config )
@@ -132,6 +135,8 @@ inline esops_t exact_synthesis_from_binary_string( const std::string& bits, cons
       ++minterm._bits;
     } while ( minterm._bits < ( 1 << num_vars ) );
 
+    assert( sample_counter > 0 );
+
     sat::gauss_elimination().apply( constraints );
     sat::xor_clauses_to_cnf( sid ).apply( constraints );
 
@@ -167,8 +172,8 @@ inline esops_t exact_synthesis_from_binary_string( const std::string& bits, cons
         bool cancel_cube = false;
         for ( auto l = 0u; l < num_vars; ++l )
         {
-          const auto p_value = result.model[j * num_vars + l] == l_True;
-          const auto q_value = result.model[num_vars * k + j * num_vars + l] == l_True;
+          const auto p_value = result.model[j * num_vars + l] == Glucose::l_True;
+          const auto q_value = result.model[num_vars * k + j * num_vars + l] == Glucose::l_True;
 
           if ( p_value && q_value )
           {
@@ -215,8 +220,8 @@ inline esops_t exact_synthesis_from_binary_string( const std::string& bits, cons
         {
           for ( auto l = 0u; l < num_vars; ++l )
           {
-            const auto p_value = result.model[j * num_vars + l] == l_True;
-            const auto q_value = result.model[num_vars * k + j * num_vars + l] == l_True;
+            const auto p_value = result.model[j * num_vars + l] == Glucose::l_True;
+            const auto q_value = result.model[num_vars * k + j * num_vars + l] == Glucose::l_True;
 
             blocking_clause.push_back( p_value ? -( 1 + vs[j] * num_vars + l ) : ( 1 + vs[j] * num_vars + l ) );
             blocking_clause.push_back( q_value ? -( 1 + num_vars * k + vs[j] * num_vars + l ) : ( 1 + num_vars * k + vs[j] * num_vars + l ) );
@@ -234,6 +239,25 @@ inline esops_t exact_synthesis_from_binary_string( const std::string& bits, cons
   }
 
   return esops;
+}
+
+} /* detail */
+
+template<typename TT>
+esops_t exact_esop( TT const& bits )
+{
+  auto const size = 1u << bits.num_vars();
+  std::string bs( size, '-' );
+  std::string cs( size, '-' );
+  for ( auto i = 0; i < size; ++i )
+  {
+    bs[i] = kitty::get_bit( bits, i ) ? '1' : '0';
+    cs[i] = '1';
+  }
+
+  nlohmann::json config;
+  config["one_esop"] = false;
+  return detail::exact_synthesis_from_binary_string( bs, cs, config );
 }
 
 } /* namespace easy::esop */
