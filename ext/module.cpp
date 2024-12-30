@@ -13,11 +13,11 @@ void qubit( py::module m );
 void gate( py::module m );
 void netlist( py::module m );
 void truth_table( py::module m );
-void esop( py::module m);
+void esop( py::module m );
 void decomposition( py::module m );
 void synthesis( py::module m );
-void cube( py::module m);
-}
+void cube( py::module m );
+} // namespace revkit
 
 PYBIND11_MODULE( _revkit, m )
 {
