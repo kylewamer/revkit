@@ -29,7 +29,7 @@
 #include <easy/esop/exact_synthesis.hpp>
 #include <easy/sat/gauss.hpp>
 #include <easy/sat/xor_clauses_to_cnf.hpp>
-#include <json/json.hpp>
+#include <nlohmann/json.hpp>
 
 namespace easy::esop
 {

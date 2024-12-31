@@ -71,7 +71,7 @@ class PyTest(TestCommand):
 
 setup(
   name='revkit',
-  version='3.1.0',
+  version='3.2.0',
   author='Mathias Soeken',
   author_email='mathias.soeken@epfl.ch',
   ext_modules=ext_modules,
