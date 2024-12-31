@@ -1,12 +1,11 @@
 [tool.poetry]
 name = "revkit"
-version = "0.1"
-description = "revkit description"
+version = "3.2.0"
+description = "Python quantum compilation library"
 authors = ["MSoeken"]
 
 [tool.poetry.dependencies]
 python = "^3.9"
-
 
 
 [tool.poetry.group.dev.dependencies]
